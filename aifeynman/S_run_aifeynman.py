@@ -93,7 +93,24 @@ def run_AI_all(pathdir,filename,BF_try_time=60,BF_ops_file_type="14ops", polyfit
     if symmetry_plus_result[0]==-1:
         idx_min = -1
     else:
-        idx_min = np.argmin(np.array([symmetry_plus_result[0], symmetry_minus_result[0], symmetry_multiply_result[0], symmetry_divide_result[0], separability_plus_result[0], separability_multiply_result[0]]))
+        # Ensure all results are moved to the CPU before converting to NumPy arrays
+        symmetry_plus_result_cpu = symmetry_plus_result[0].cpu().numpy()
+        symmetry_minus_result_cpu = symmetry_minus_result[0].cpu().numpy()
+        symmetry_multiply_result_cpu = symmetry_multiply_result[0].cpu().numpy()
+        symmetry_divide_result_cpu = symmetry_divide_result[0].cpu().numpy()
+        separability_plus_result_cpu = separability_plus_result[0].cpu().numpy()
+        separability_multiply_result_cpu = separability_multiply_result[0].cpu().numpy()
+    
+        # Find the index of the minimum value
+        idx_min = np.argmin(np.array([
+            symmetry_plus_result_cpu,
+            symmetry_minus_result_cpu,
+            symmetry_multiply_result_cpu,
+            symmetry_divide_result_cpu,
+            separability_plus_result_cpu,
+            separability_multiply_result_cpu
+        ]))
+        #idx_min = np.argmin(np.array([symmetry_plus_result[0], symmetry_minus_result[0], symmetry_multiply_result[0], symmetry_divide_result[0], separability_plus_result[0], separability_multiply_result[0]]))
 
     print("")
     # Check if compositionality is better than the best so far
